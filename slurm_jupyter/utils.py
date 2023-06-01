@@ -42,7 +42,8 @@ def execute(cmd, stdin=None, shell=False, check_failure=True):
         process = Popen(lst, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     stdout, stderr = process.communicate(stdin)
     if check_failure:
-        assert not process.returncode
+        if process.returncode:
+            raise RuntimeError(f'Command "{cmd}" failed with return code {process.returncode}:\n{stderr.decode("utf-8")}')
     return stdout, stderr
 
 
